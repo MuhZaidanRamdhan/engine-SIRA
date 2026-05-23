@@ -1,0 +1,29 @@
+[
+    {
+        "query": "Saya tertarik pada mata kuliah tentang pengolahan data",
+        "expected_keywords": 
+        [
+            "data",
+            "algoritma",
+            "mining"
+        ]
+    },
+    {
+        "query": "Saya tertarik pada mata kuliah tentang keamanan web",
+        "expected_keywords": 
+        [
+            "keamanan",
+            "web",
+            "autentikasi"
+        ]
+    },
+    {
+        "query": "Saya tertarik pada mata kuliah tentang jaringan",
+        "expected_keywords": 
+        [
+            "jaringan",
+            "komunikasi",
+            "protokol"
+        ]
+    }
+]
