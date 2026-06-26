@@ -1,29 +1,124 @@
 [
-    {
-        "query": "Saya tertarik pada mata kuliah tentang pengolahan data",
-        "expected_keywords": 
-        [
-            "data",
-            "algoritma",
-            "mining"
-        ]
-    },
-    {
-        "query": "Saya tertarik pada mata kuliah tentang keamanan web",
-        "expected_keywords": 
-        [
-            "keamanan",
-            "web",
-            "autentikasi"
-        ]
-    },
-    {
-        "query": "Saya tertarik pada mata kuliah tentang jaringan",
-        "expected_keywords": 
-        [
-            "jaringan",
-            "komunikasi",
-            "protokol"
-        ]
-    }
+  {
+    "query": "saya tertarik pada keamanan",
+    "expected_keywords": [
+      "keamanan",
+      "siber",
+      "cyber",
+      "hacking",
+      "enkripsi",
+      "forensik"
+    ]
+  },
+  {
+    "query": "saya tertarik pada data",
+    "expected_keywords": [
+      "data",
+      "basis data",
+      "pengolahan data",
+      "analisis",
+      "sql",
+      "pola"
+    ]
+  },
+  {
+    "query": "saya tertarik pada AI",
+    "expected_keywords": [
+      "kecerdasan buatan",
+      "kecerdasan artifisial",
+      "machine learning",
+      "neural"
+    ]
+  },
+  {
+    "query": "saya tertarik pada web",
+    "expected_keywords": [
+      "web",
+      "aplikasi web",
+      "frontend",
+      "html",
+      "javascript"
+    ]
+  },
+  {
+    "query": "saya tertarik pada jaringan",
+    "expected_keywords": ["jaringan", "network", "protokol", "routing", "tcp"]
+  },
+  {
+    "query": "saya tertarik pada pemrograman",
+    "expected_keywords": ["pemrograman", "coding", "python", "java", "kode"]
+  },
+  {
+    "query": "saya tertarik pada keamanan jaringan",
+    "expected_keywords": [
+      "keamanan jaringan",
+      "jaringan",
+      "keamanan",
+      "firewall",
+      "vpn"
+    ]
+  },
+  {
+    "query": "saya tertarik pada machine learning",
+    "expected_keywords": [
+      "machine learning",
+      "kecerdasan buatan",
+      "model",
+      "supervised",
+      "training"
+    ]
+  },
+  {
+    "query": "saya tertarik pada pengolahan data",
+    "expected_keywords": [
+      "data",
+      "analisis",
+      "pengolahan data",
+      "statistik",
+      "eksplorasi"
+    ]
+  },
+  {
+    "query": "saya tertarik pada UI UX",
+    "expected_keywords": [
+      "ui",
+      "ux",
+      "desain",
+      "antarmuka",
+      "figma",
+      "prototype"
+    ]
+  },
+  {
+    "query": "saya tertarik pada pengembangan aplikasi mobile",
+    "expected_keywords": ["mobile", "android", "ios", "aplikasi", "flutter"]
+  },
+  {
+    "query": "saya tertarik pada sistem operasi dan komputasi",
+    "expected_keywords": ["sistem operasi", "os", "linux", "proses", "memori"]
+  },
+  {
+    "query": "saya ingin belajar algoritma dan struktur data",
+    "expected_keywords": [
+      "algoritma",
+      "struktur data",
+      "sorting",
+      "graf",
+      "kompleksitas"
+    ]
+  },
+  {
+    "query": "saya tertarik pada forensik digital",
+    "expected_keywords": [
+      "forensik",
+      "digital forensik",
+      "investigasi",
+      "bukti digital",
+      "siber"
+    ]
+  },
+  {
+    "query": "saya tertarik pada teknologi",
+    "expected_keywords": ["teknologi", "sistem", "informasi", "komputer"]
+  }
 ]

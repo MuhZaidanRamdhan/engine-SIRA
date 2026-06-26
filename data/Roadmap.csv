@@ -1,0 +1,80 @@
+No,Matakuliah,Semester,Peminatan,Tipe_MK
+1,Pembentukan karakter,1,Umum,Wajib
+2,Bahasa Indonesia,1,Umum,Wajib
+3,Matematika Komputer,1,Umum,Wajib
+4,Dasar-dasar Pemograman,1,Umum,Wajib
+5,Literasi Digital,1,Umum,Wajib
+6,Sistem Operasi,1,Umum,Wajib
+7,Desain UI/UX,1,Umum,Wajib
+8,Organisasi dan Arsitektur Komputer,1,Umum,Wajib
+9,Komunikasi Efektif,2,Umum,Wajib
+10,Bahasa Inggris 1,2,Umum,Wajib
+11,Statistika & Probabilitas,2,Umum,Wajib
+12,Basis Data,2,Umum,Wajib
+13,Interaksi Manusia & Komputer,2,Umum,Wajib
+14,Jaringan Komputer,2,Umum,Wajib
+15,Pemrograman Web,2,Umum,Wajib
+16,Struktur Data dan Algoritma,2,Umum,Wajib
+17,Pendidikan Agama,3,Umum,Wajib
+18,Bahasa Inggris 2,3,Umum,Wajib
+19,Rekayasa Perangkat Lunak,3,Umum,Wajib
+20,Komputasi Paralel dan Terdistribusi,3,Umum,Wajib
+21,Pemrograman Berorientasi Objek,3,Umum,Wajib
+22,Machine Learning,3,Artificial Intelligence,Peminatan
+23,Information Retrieval,3,Artificial Intelligence,Peminatan
+24,Exploratory Data Analysis,3,Artificial Intelligence,Peminatan
+25,DevOpsSec,3,Cyber Security,Peminatan
+26,Keamanan Web,3,Cyber Security,Peminatan
+27,Incident Response,3,Cyber Security,Peminatan
+28,Pendidikan Pancasila dan Kewarganegaraan,4,Umum,Wajib
+29,Manajemen Proyek,4,Umum,Wajib
+30,Kecerdasan Artifisial,4,Umum,Wajib
+31,Virtualisasi dan Keamanan Jaringan,4,Umum,Wajib
+32,Pemrograman Fullstack,4,Umum,Wajib
+33,Natural Language Processing,4,Artificial Intelligence,Peminatan
+34,Data Mining,4,Artificial Intelligence,Peminatan
+35,Pengolahan Citra,4,Artificial Intelligence,Peminatan
+36,Kriptografi,4,Cyber Security,Peminatan
+37,Ethical Hacking,4,Cyber Security,Peminatan
+38,Digital Forensics,4,Cyber Security,Peminatan
+39,Proyek Kerja Praktik 1,5,Umum,Pilihan
+40,Proyek Studi Independent 1,5,Umum,Pilihan
+41,Proyek Magang Riset 1,5,Umum,Pilihan
+42,Proyek Kewirausahaan 1,5,Umum,Pilihan
+43,Proyek Asistensi Mengajar 1,5,Umum,Pilihan
+44,Proyek Kuliah Kerja Nyata 1,5,Umum,Pilihan
+45,Proyek Kemanusiaan 1,5,Umum,Pilihan
+46,Proyek Pertukaran Mahasiswa 1,5,Umum,Pilihan
+47,Keterampilan Kerjasama,5,Umum,Wajib
+48,Teknik Identifikasi Masalah,5,Umum,Wajib
+49,Analisis dan Desain Solusi,5,Umum,Wajib
+50,Pengujian Perangkat Lunak,5,Umum,Wajib
+51,Technpreneurship,5,Umum,Wajib
+52,Proyek Kerja Praktik 2,6,Umum,Pilihan
+53,Proyek Studi Independent 2,6,Umum,Pilihan
+54,Proyek Magang Riset 2,6,Umum,Pilihan
+55,Proyek Kewirausahaan 2,6,Umum,Pilihan
+56,Proyek Asistensi Mengajar 2,6,Umum,Pilihan
+57,Proyek Kuliah Kerja Nyata 2,6,Umum,Pilihan
+58,Proyek Kemanusiaan 2,6,Umum,Pilihan
+59,Proyek Pertukaran Mahasiswa 2,6,Umum,Pilihan
+60,Implementasi Solusi,6,Umum,Wajib
+61,Presentasi Proyek,6,Umum,Wajib
+62,Penulisan Dokumentasi Proyek,6,Umum,Wajib
+63,Keterampilan Kepemimpinan,6,Umum,Wajib
+64,Integrasi Sistem,6,Umum,Wajib
+65,Metodologi Penelitian,7,Umum,Wajib
+66,Capstone Project,7,Umum,Wajib
+67,Topik Khusus TI,7,Umum,Wajib
+68,Kewirausahaan,7,Umum,Pilihan
+69,Sistem Informasi Pilihan,7,Umum,Pilihan
+70,Big Data,7,Umum,Pilihan
+71,Pemograman IOT,7,Umum,Pilihan
+72,Jaminan Kualitas Perangkat Lunak,7,Umum,Pilihan
+73,Visualisasi Data,7,Umum,Pilihan
+74,Tugas Akhir,8,Umum,Wajib
+75,Metodologi Penelitian,8,Umum,Wajib
+76,Capstone Project,8,Umum,Wajib
+77,Topik Khusus TI,8,Umum,Wajib
+78,Etika Profesi,8,Umum,Pilihan
+79,Sistem Informasi Pilihan,8,Umum,Pilihan

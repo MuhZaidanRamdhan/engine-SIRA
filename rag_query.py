@@ -1,61 +1,101 @@
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 import requests
 import re
+import gc
+from groq import Groq
+from dotenv import load_dotenv
+import os
 
 # =========================================================
 # CONFIG
 # =========================================================
-NGROK_URL = "https://onstage-ramrod-swear.ngrok-free.dev"
-THRESHOLD = 0.6
-
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+THRESHOLD = 0.04
 
 
 STOPWORDS = {
     "saya", "tertarik", "dengan", "mata",
-    "kuliah", "tentang", "pada", "dan"
+    "kuliah", "tentang", "pada", "dan", "membahas","yang"
 }
 
 # =========================================================
 # LOAD EMBEDDING
 # =========================================================
 embedding = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 )
 
-# vectordb = Chroma(
-#     persist_directory="embeddings",
-#     embedding_function=embedding
-# )
+vectordb = Chroma(
+    persist_directory="embeddings",
+    embedding_function=embedding
+)
 
+_vectordb = None
 
 def get_vectordb():
-    return Chroma(
-        persist_directory="embeddings",
-        embedding_function=embedding
-    )
+    global _vectordb
+    if _vectordb is None:
+        _vectordb = Chroma(
+            persist_directory="embeddings",
+            embedding_function=embedding
+        )
+    return _vectordb
+
+def reset_vectordb():
+    global _vectordb
+    _vectordb = None
+    gc.collect()
 # =========================================================
 # CALL LLM
 # =========================================================
+# def call_llm(query, context):
+#     try:
+#         response = requests.post(
+#             f"{NGROK_URL}/generate",
+#             headers={"Content-Type": "application/json"},
+#             json={"query": query, "context": context},
+#             timeout=120
+#         )
+
+#         print("\n=== DEBUG LLM ===")
+#         print("STATUS:", response.status_code)
+
+#         if response.status_code != 200:
+#             return None
+
+#         return response.json().get("answer", "")
+
+#     except Exception as e:
+#         print("❌ ERROR LLM:", str(e))
+#         return None
+
 def call_llm(query, context):
     try:
-        response = requests.post(
-            f"{NGROK_URL}/generate",
-            headers={"Content-Type": "application/json"},
-            json={"query": query, "context": context},
-            timeout=120
+        client = Groq(api_key=GROQ_API_KEY)
+
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",  
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Kamu adalah asisten akademik yang membantu menjelaskan mata kuliah. Jawab dalam Bahasa Indonesia."
+                },
+                {
+                    "role": "user",
+                    "content": query
+                }
+            ],
+            max_tokens=1000,
+            temperature=0.3
         )
 
-        print("\n=== DEBUG LLM ===")
-        print("STATUS:", response.status_code)
+        answer = response.choices[0].message.content
 
-        if response.status_code != 200:
-            return None
-
-        return response.json().get("answer", "")
+        return answer
 
     except Exception as e:
-        print("❌ ERROR LLM:", str(e))
         return None
 
 
@@ -97,11 +137,7 @@ Jawab:
     response = call_llm(prompt, "")
 
     if not response:
-        print("⚠️ LLM OFFLINE → pakai fallback di main")
         return []
-
-    print("\n=== DEBUG PARSING ===")
-    print("RAW:\n", response)
 
     lines = re.split(r'\n|\.\s', response)
 
@@ -131,52 +167,112 @@ Jawab:
 
         cleaned.append(line)
 
-    # 🔥 kalau parsing gagal total → return kosong
     if len(cleaned) == 0:
-        print("⚠️ PARSING GAGAL → pakai fallback di main")
         return []
 
     return cleaned[:jumlah]
 
+QUERY_EXPANSION = {
+    "ai": "kecerdasan buatan kecerdasan artifisial machine learning",
+    "ml": "machine learning kecerdasan buatan model prediktif",
+    "nlp": "natural language processing pemrosesan bahasa",
+    "oop": "pemrograman berorientasi objek kelas enkapsulasi",
+    "ui": "antarmuka pengguna desain interface figma prototype wireframe",
+    "ux": "pengalaman pengguna desain usability figma prototype wireframe",
+    "uiux": "antarmuka pengguna desain interface pengalaman pengguna usability figma",
+    "db": "basis data database sql",
+    "antarmuka": "desain antarmuka ui ux interaksi penggunaan figma",
+    "web": "pemrograman web aplikasi web frontend backend keamanan web",
+    "jaringan": "jaringan komputer network routing switching lan wan terdistribusi"
+}
 
-# =========================================================
-# MAIN RAG
-# =========================================================
+KEYWORD_EXPANSION = {
+    "ai": ["ai", "kecerdasan buatan", "kecerdasan artifisial", "machine learning"],
+    "ml": ["ml", "machine learning", "kecerdasan buatan"],
+    "nlp": ["nlp", "natural language processing", "bahasa alami"],
+    "oop": ["oop", "berorientasi objek", "objek"],
+    "ui": ["ui", "antarmuka", "interface", "desain", "figma"],
+    "ux": ["ux", "pengalaman pengguna", "usability", "figma"],
+    "uiux": ["ui", "ux", "antarmuka", "desain", "figma", "usability"],
+    "db": ["db", "basis data", "database", "sql"],
+    "antarmuka": ["antarmuka", "ui", "ux", "desain", "interaksi", "pengguna"],
+    "web": ["web", "aplikasi web", "frontend", "backend", "html", "javascript"],
+    "jaringan": ["jaringan", "network", "routing", "switching", "lan", "wan", "terdistribusi"]
+}
+
+def expand_query(query: str) -> str:
+    words = query.lower().split()
+    
+    if len(words) == 1 and words[0] not in QUERY_EXPANSION:
+        query = f"saya tertarik pada {query}"
+        words = query.lower().split()
+    
+    expanded = []
+    for word in words:
+        if word in QUERY_EXPANSION:
+            expanded.append(QUERY_EXPANSION[word])
+        else:
+            expanded.append(word)
+    return " ".join(expanded)
+
 def get_recommendation(query: str):
-
     print("\n=== QUERY ===", query)
-    vectordb = get_vectordb()
+    original_query = query
+    query = expand_query(query)
+    print("=== EXPANDED QUERY ===", query)
 
+    vectordb = get_vectordb()
     results = vectordb.similarity_search_with_score(query, k=10)
 
     unique_results = []
     seen_codes = set()
-
     for doc, score in results:
         kode = doc.metadata.get("kode_mk")
         if kode not in seen_codes:
             seen_codes.add(kode)
             unique_results.append((doc, score))
 
+    print("RAW RESULTS:")
+    for doc, score in results:
+        print(f"  - {doc.metadata.get('nama_mk')} | score: {score:.4f}")
+
+    # keyword dari query asli
     query_keywords = [
-        w for w in query.lower().split()
+        w for w in original_query.lower().split()
         if w not in STOPWORDS
     ]
+
+    # expand keyword untuk filter
+    expanded_keywords = []
+    for word in query_keywords:
+        if word in KEYWORD_EXPANSION:
+            expanded_keywords.extend(KEYWORD_EXPANSION[word])
+        else:
+            expanded_keywords.append(word)
 
     final_results = []
 
     for doc, score in unique_results:
-        relevance_score = 1 / (1 + score)
+        semester = int(doc.metadata.get("semester", 0))
+        if semester > 4:
+            continue
 
-        nama_mk = doc.metadata.get("nama_mk").lower()
-        description = doc.page_content.lower()
+        relevance_score = 1 / (1 + score)
+        print(f"{doc.metadata.get('nama_mk')} | relevance: {relevance_score:.4f}")
+
+        nama_mk = doc.metadata.get("nama_mk", "").lower().strip()
+        description = doc.page_content.lower().strip()
+        description = re.sub(r'\s+', ' ', description) 
+
+        combined_text = nama_mk + " " + description
 
         for word in query_keywords:
             if word in nama_mk:
                 relevance_score += 0.08
+                
 
-        if not any(word in (nama_mk + " " + description)
-                   for word in query_keywords):
+        # filter pakai expanded_keywords
+        if not any(re.search(r'\b' + re.escape(word) + r'\b', combined_text) for word in expanded_keywords):
             continue
 
         if relevance_score < THRESHOLD:
@@ -188,9 +284,11 @@ def get_recommendation(query: str):
         final_results,
         key=lambda x: x[1],
         reverse=True
-    )[:5]
+    )[:8]
 
     print("JUMLAH HASIL:", len(final_results))
+    for doc, score in final_results:
+        print(f"  - {doc.metadata.get('nama_mk')}")
 
     courses = []
 
@@ -205,8 +303,6 @@ def get_recommendation(query: str):
         })
 
     reasons = build_reasons(courses)
-
-    print("JUMLAH REASONS:", len(reasons))
 
     formatted_results = []
 
@@ -231,10 +327,6 @@ def get_recommendation(query: str):
 
     return formatted_results
 
-
-# =========================================================
-# TEST
-# =========================================================
 if __name__ == "__main__":
     query = input("Masukkan minat: ")
     result = get_recommendation(query)

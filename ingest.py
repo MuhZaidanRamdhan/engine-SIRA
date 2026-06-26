@@ -1,8 +1,9 @@
+import gc
+import time
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from rag_query import reset_vectordb
 
 def sync_courses_to_chroma(courses):
     print("Menerima data dari Express API...")
@@ -10,11 +11,9 @@ def sync_courses_to_chroma(courses):
     documents = []
 
     for course in courses:
-        combined_text = f"""
-        Nama Mata Kuliah: {course.nama_mk}
+        combined_text = f"""Nama Mata Kuliah: {course.nama_mk}
         Peminatan: {course.peminatan}
-        Deskripsi: {course.deskripsi}
-        """
+        Deskripsi: {course.deskripsi}"""
 
         doc = Document(
             page_content=combined_text.strip(),
@@ -26,45 +25,36 @@ def sync_courses_to_chroma(courses):
                 "semester": course.semester
             }
         )
-
         documents.append(doc)
 
     print(f"Total mata kuliah diterima: {len(documents)}")
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=300,
-        chunk_overlap=50
-    )
-
-    docs = text_splitter.split_documents(documents)
-
-    print(f"Total chunk setelah split: {len(docs)}")
-
     embedding = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
+        model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     )
 
-    print("Menghapus vector lama...")
+    # reset koneksi RAG dulu
+    reset_vectordb()
+    gc.collect()
+    time.sleep(1)
 
+    print("Menghapus collection lama...")
     try:
         old_db = Chroma(
             persist_directory="embeddings",
             embedding_function=embedding
         )
-
         old_db.delete_collection()
-
-    except:
-        print("Collection lama tidak ditemukan")
+        print("Collection lama dihapus")
+    except Exception as e:
+        print(f"Collection lama tidak ditemukan: {e}")
 
     print("Menyimpan vector baru...")
-
     Chroma.from_documents(
-        docs,
+        documents,
         embedding=embedding,
         persist_directory="embeddings"
     )
 
     print("Sinkronisasi selesai")
-
     return len(documents)

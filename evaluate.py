@@ -1,13 +1,13 @@
 import json
 import re
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
 
 # =========================
 # 1. LOAD VECTOR DB
 # =========================
 embedding = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 )
 
 vectordb = Chroma(
@@ -15,8 +15,7 @@ vectordb = Chroma(
     embedding_function=embedding
 )
 
-# 🔥 lebih ketat
-THRESHOLD = 0.6
+THRESHOLD = 0.05
 TOP_K = 8
 
 # =========================
